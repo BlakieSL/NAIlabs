@@ -1,14 +1,11 @@
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 public class KNN {
-    private ArrayList<Observation> data;
+    private final ArrayList<Observation> data;
     private int k;
-
     public KNN(String filename, int k) {
         this.k = k;
         this.data = loadData(filename);
@@ -36,28 +33,33 @@ public class KNN {
     public void setK(int k){
         this.k = k;
     }
-
-    public String classification(double[] values) {
-        ArrayList<Observation> nearestNeighbors = findNearestNeighbors(values);
-        return getMajorityVote(nearestNeighbors);
+    public int getK(){
+        return this.k;
     }
-
-    private ArrayList<Observation> findNearestNeighbors(double[] values) {
-        return (ArrayList<Observation>) data.stream()
+    public String classification(double[] values) {
+        ArrayList<Observation> nearest = findNearest(values);
+        return getMajor(nearest);
+    }
+    private ArrayList<Observation> findNearest(double[] values) {
+        return (ArrayList<Observation>) data
+                .stream()
                 .sorted(Comparator.comparingDouble(obs -> obs.calcDist(values)))
                 .limit(k)
                 .collect(Collectors.toList());
     }
+    private String getMajor(ArrayList<Observation> nearest) {
 
-    private String getMajorityVote(ArrayList<Observation> nearestNeighbors) {
-        HashMap<String, Integer> labelCounts = new HashMap<>();
-        for (Observation obs : nearestNeighbors) {
-            String label = obs.getLabel();
-            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
+        HashMap<String, Integer> count = new HashMap<>();
+
+        for (Observation obs : nearest) {
+            String label = obs.label();
+            count.put(label, count.getOrDefault(label, 0) + 1);
         }
+
         String majorityLabel = null;
         int maxCount = 0;
-        for (HashMap.Entry<String, Integer> entry : labelCounts.entrySet()) {
+
+        for (HashMap.Entry<String, Integer> entry : count.entrySet()) {
             if (entry.getValue() > maxCount) {
                 maxCount = entry.getValue();
                 majorityLabel = entry.getKey();
