@@ -43,7 +43,7 @@ public class KNN {
     private ArrayList<Observation> findNearest(double[] values) {
         return (ArrayList<Observation>) data
                 .stream()
-                .sorted(Comparator.comparingDouble(obs -> obs.calcDist(values)))
+                .sorted(Comparator.comparingDouble(obs -> obs.calcDist(values)))//sort according to comparator specifications(calc dist, then compare)
                 .limit(k)
                 .collect(Collectors.toList());
     }

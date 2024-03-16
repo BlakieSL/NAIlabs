@@ -11,8 +11,11 @@ public class Main {
     public static void main(String[] args){
 
         Scanner scanner = new Scanner(System.in);
+        /*
         System.out.println("Enter the filename: ");
         String filepath =  System.getProperty("user.dir")+ File.separator + scanner.nextLine();
+       */
+        String filepath = System.getProperty("user.dir")+ File.separator + "train.txt";
         System.out.println("Enter k: ");
         KNN knn = new KNN(filepath, scanner.nextInt());
         scanner.nextLine();
