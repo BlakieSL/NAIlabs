@@ -2,15 +2,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         Loader loader = new Loader();
         Text textProcessor = new Text();
-
-        int featureSize = textProcessor.getFeatureSize();
         NeuralNetwork network = new NeuralNetwork();
 
-        network.train(loader.loadTrainingData());
-
-        Scanner scanner = new Scanner(System.in);
+        network.train(loader.load());
 
         while (true) {
             System.out.println("Enter text or exit");
@@ -19,7 +16,7 @@ public class Main {
                 break;
             }
 
-            double[] vector = textProcessor.processText(input);
+            double[] vector = textProcessor.process(input);
             String language = network.predict(vector);
             System.out.println("Predicted language: " + language);
         }
